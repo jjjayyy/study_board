@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.rog//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="lab10Board.dao.BoardDAO">
+	<select id="getBoardList" parameterType="int" resultType = "lab10Board.vo.BoardVO">
+		select seq, title, writer, content, regdate, cnt from 
+		(select row_number() over (order by seq desc) runm, seq, title, writer, content, regdate, cnt from board)
+		 where runm between #{index}-9 and #{index}
+	</select>
+	<!-- 글목록 -->
+	
+	<select id="getArticle" parameterType="int" resultType="lab10Board.vo.BoardVO">
+		select * from board <where> seq = #{seq}</where>
+	</select>
+	<!-- 글내용 -->
+	
+	<update id="updateCnt" parameterType="lab10Board.vo.BoardVO">
+		update board set cnt = cnt +1 <where> seq=#{seq}</where>
+	</update>
+	<!-- 조회수업데이트 -->
+	
+	<insert id="insertArticle" parameterType="lab10Board.vo.BoardVO">
+		insert into board (seq, title, writer, content, regdate, cnt) values (#{seq},#{title},#{writer},#{content},sysdate,0)
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			select autosqc.nextval from dual
+		</selectKey>
+	</insert>
+	<!-- 글쓰기 -->
+	
+	<select id="getListByTitle" parameterType= "string" resultType="lab10Board.vo.BoardVO">
+		select * from board <where> title like '%'||#{title}||'%' </where> 
+	</select>
+	<!-- 제목으로 글 검색 -->
+	
+	<select id="getListByContent" parameterType= "string" resultType="lab10Board.vo.BoardVO">
+		select * from board <where> content like '%'||#{content}||'%' </where> 
+	</select>
+	<!-- 내용으로 글 검색 -->
+	
+	<select id="getListByWriter" parameterType= "string" resultType="lab10Board.vo.BoardVO">
+		select * from board <where> writer like '%'||#{writer}||'%' </where> 
+	</select>
+	<!-- 작성자로 글 검색 -->
+	
+	<delete id="deleteArticle" parameterType="lab10Board.vo.BoardVO">
+		delete from board <where> seq=#{seq}</where>
+	</delete>
+	<!-- 글 삭제 -->
+	
+	<update id="modify" parameterType="lab10Board.vo.BoardVO">
+		update board set title=#{title}, writer=#{writer}, content=#{content} <where> seq=#{seq}</where>
+	</update> 
+	<!-- 게시글 수정 -->
+		
+	<select id="totalPage" resultType="int">
+		select count(*) from board
+	</select>
+	<!-- 총 페이지 -->
+
+	<select id="getReply" parameterType="int" resultMap="replyMap">
+		select * from reply <where> board_seq=#{seq}</where>
+	</select>
+	<!-- 댓글 목록 -->
+	
+	<insert id="insertReply" parameterType="lab10Board.vo.ReplyVO">
+		insert into reply (board_seq, seq, writer, content, regdate) values (#{boardSeq},#{seq},#{writer},#{content},sysdate)
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			select autoseq.nextval from dual
+		</selectKey>
+	</insert>
+	<!-- 댓글 입력 -->
+	
+	<resultMap type="lab10Board.vo.ReplyVO" id="replyMap">
+		<result column="board_seq" property="boardSeq"/>
+		<result column="seq" property="seq"/>
+		<result column="writer" property="writer"/>
+		<result column="content" property="content"/>
+		<result column="regdate" property="regdate"/>
+	</resultMap>
+	
+</mapper>
