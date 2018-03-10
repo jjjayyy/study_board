@@ -93,39 +93,29 @@ function pwAlert(){
 			$('#reg').on("click", function() {
 
 			$.ajax({
-					type: 'post', 
-					async:true,
 					url: 'insertReply.do',
-					data: {  "boardSeq" : $("[name='seq']").val(), 
-						  	"writer" : $('#writer').val(),
-						   "content" : $('#content').val()},
+					type: 'get',
+					data: {  "boardSeq" : $("[name='seq']").val(), "writer" : $('#writer').val(), "content" : $('#content').val()},
 					success: function(data){
-						alert("성공"); 
-					    	
-//getJSON 활용
-/* 						var writer = $('#writer').val();
-						   var content = $('#content').val();
-						   var url = "insertReply.do?writer="  +writer+ "&content=" +content+"&boardSeq=" + $("[name='seq']").val(); 
-						  
-						   $.getJSON(url, function(data){
-	 				 	alert("json"); */
-	 				 	
-	 					var html=""; 
-							$(data).each(function(key, value){
+						
+
+ 	 					var html=""; 
+							$.each(data, function(key, value){
 								alert("성공"); 
 								html += "<tr><td>" + value.writer + "</td><td>" + value.content + "</td></tr>";
 							
-							});
-							$('#replyTable'). append(html); 
-//	 					 	}); 
+							}); 
+							$('#replyTable'). html(html); 
 														  	
 							 	$('#typing').remove();
 								$('#reg').hide();
 								$('#reply').show();
  	 				 	},
-					error: function(data){
-						alert("에러");
-					}
+ 	 				error : function(request,status,error){   
+ 	 					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+ 	 					
+ 	 					}
+
 			});
 			}); 
 		});

@@ -2,6 +2,7 @@ package lab10Board.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lab10Board.Service.BoardService;
 import lab10Board.vo.BoardVO;
@@ -111,11 +113,10 @@ public class BoardController {
 	
 	//´ñ±Û µî·Ï
 	@RequestMapping("/insertReply.do")
-	public String insertReply(ReplyVO vo, HttpServletRequest req){
-		boardService.insertReply(vo);
+	public @ResponseBody Object insertReply(ReplyVO vo){	
+//		boardService.insertReply(vo);
 		ArrayList<ReplyVO> rvo = boardService.getReply(vo.getBoardSeq());
-		System.out.println(vo.getBoardSeq());
-		req.setAttribute("replyList", rvo);		
-		return "newReply";
+		
+		return boardService.getReply(vo.getBoardSeq());
 	}
 }
