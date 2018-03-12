@@ -33,7 +33,7 @@ public class BoardController {
 		ArrayList<BoardVO> list = boardService.getBoardList(index);
 		int totalPage = boardService.totalPage();
 		if(list != null)
-			req.setAttribute("list", list);
+		req.setAttribute("list", list);
 		req.setAttribute("totalPage",totalPage);
 		req.setAttribute("currentPage", index);
 		return "boardList";
@@ -114,7 +114,7 @@ public class BoardController {
 	//´ñ±Û µî·Ï
 	@RequestMapping("/insertReply.do")
 	public @ResponseBody Object insertReply(ReplyVO vo){	
-//		boardService.insertReply(vo);
+		boardService.insertReply(vo);
 		ArrayList<ReplyVO> rvo = boardService.getReply(vo.getBoardSeq());
 		
 		return boardService.getReply(vo.getBoardSeq());

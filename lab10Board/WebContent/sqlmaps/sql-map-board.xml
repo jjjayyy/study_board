@@ -5,7 +5,7 @@
 	<select id="getBoardList" parameterType="int" resultType = "lab10Board.vo.BoardVO">
 		select seq, title, writer, content, regdate, cnt from 
 		(select row_number() over (order by seq desc) runm, seq, title, writer, content, regdate, cnt from board)
-		 where runm between #{index}-9 and #{index}
+		 where runm between #{index}-9 and #{index} 
 	</select>
 	<!-- 글목록 -->
 	
